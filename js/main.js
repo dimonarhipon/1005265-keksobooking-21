@@ -7,62 +7,72 @@ const PHOTOS = [
   `http://o0.github.io/assets/images/tokyo/hotel2.jpg`,
   `http://o0.github.io/assets/images/tokyo/hotel3.jpg`
 ];
-const ANNOUNCEMENT_COUNT = 8;
+const ADVERT_COUNT = 8;
 const PIN_OFSET_X = 25;
-const DEFAULT_PRICE = 1000;
+const PRICES = [0, 1000, 5000, 10000];
+const ROOMS = [1, 2, 3, 100];
 const PLACEMARK = {maxY: 630, minY: 130};
 
 const getRandomNumber = (max, min = 0) => {
   return Math.floor(Math.random() * (max - min) + min);
 };
-const NEW_FEATURES = FEATURES.filter((item) => getRandomNumber(2) ? item : null);
-const NEW_PHOTOS = PHOTOS.filter((item) => getRandomNumber(2) ? item : null);
 
-const announcements = [];
-const createAnnouncement = () => {
-  for (let i = 1; i <= ANNOUNCEMENT_COUNT; i++) {
-    announcements.push({
+const createAdvert = (count) => {
+  const adverts = [];
+  for (let i = 0; i < count; i++) {
+
+    const current = i + 1;
+    let NEW_FEATURES = FEATURES.filter((item) => getRandomNumber(2) ? item : null);
+    let NEW_PHOTOS = PHOTOS.filter((item) => getRandomNumber(2) ? item : null);
+    let coordinateX = getRandomNumber(document.body.clientWidth - PIN_OFSET_X, PIN_OFSET_X);
+    let coordinateY = getRandomNumber(PLACEMARK.maxY, PLACEMARK.minY);
+
+    adverts.push({
       author: {
-        avatar: `img/avatars/user0${i}.png`,
+        avatar: `img/avatars/user0${current}.png`,
       },
       offer: {
-        title: `Заголовок предложения ${i}`,
-        address: `{{location.x}}, {{location.y}}`,
-        price: i * DEFAULT_PRICE,
-        typ: TYPES[getRandomNumber(TYPES.length)],
-        rooms: i,
-        guests: i,
+        title: `Заголовок предложения ${current}`,
+        address: `${coordinateX}, ${coordinateY}`,
+        price: PRICES[getRandomNumber(PRICES.length)],
+        type: TYPES[getRandomNumber(TYPES.length)],
+        rooms: ROOMS[getRandomNumber(ROOMS.length)],
+        guests: current,
         checkin: TIMES[getRandomNumber(TIMES.length)],
         checkout: TIMES[getRandomNumber(TIMES.length)],
         features: NEW_FEATURES,
-        description: `строка с описанием ${i}`,
+        description: `строка с описанием ${current}`,
         photos: NEW_PHOTOS,
       },
       location: {
-        x: getRandomNumber(document.body.clientWidth),
-        y: getRandomNumber(PLACEMARK.maxY, PLACEMARK.minY),
+        x: coordinateX,
+        y: coordinateY,
       }
     });
   }
+  return adverts;
 };
-createAnnouncement();
 
-document.querySelector(`.map`).classList.remove(`map--faded`);
-const announcementTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
-const renderAnnouncement = (announcement) => {
-  const announcementElement = announcementTemplate.cloneNode(true);
-  const img = announcementElement.querySelector(`img`);
+const map = document.querySelector(`.map`);
+map.classList.remove(`map--faded`);
 
-  announcementElement.style = `left: ${announcement.location.x + PIN_OFSET_X}px; top: ${announcement.location.y}px`;
-  img.src = announcement.author.avatar;
-  img.alt = announcement.offer.title;
+const adverts = createAdvert(ADVERT_COUNT);
+const advertTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 
-  return announcementElement;
+const renderAdvert = (advert) => {
+  const advertElement = advertTemplate.cloneNode(true);
+  const img = advertElement.querySelector(`img`);
+
+  advertElement.style = `left: ${advert.location.x}px; top: ${advert.location.y}px`;
+  img.src = advert.author.avatar;
+  img.alt = advert.offer.title;
+
+  return advertElement;
 };
 
 const fragment = document.createDocumentFragment();
 
-for (let i = 0; i < ANNOUNCEMENT_COUNT; i++) {
-  fragment.appendChild(renderAnnouncement(announcements[i]));
+for (let i = 0; i < ADVERT_COUNT; i++) {
+  fragment.appendChild(renderAdvert(adverts[i]));
 }
-document.querySelector(`.map__pins`).appendChild(fragment);
+map.querySelector(`.map__pins`).appendChild(fragment);
