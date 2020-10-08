@@ -1,21 +1,21 @@
 'use strict';
-const TYPES = [`palace`, `flat`, `house`, `bungalo`];
-const TIMES = [`12:00`, `13:00`, `14:00`];
-const FEATURES = [`wifi`, `dishwasher`, `parking`, `washer`, `elevator`, `conditioner`];
-const PHOTOS = [
-  `http://o0.github.io/assets/images/tokyo/hotel1.jpg`,
-  `http://o0.github.io/assets/images/tokyo/hotel2.jpg`,
-  `http://o0.github.io/assets/images/tokyo/hotel3.jpg`
-];
-const ADVERT_COUNT = 8;
-const PIN_OFSET_X = 25;
-const PRICES = [0, 1000, 5000, 10000];
-const ROOMS = [1, 2, 3, 100];
-const PLACEMARK = {maxY: 630, minY: 130};
+// const TYPES = [`palace`, `flat`, `house`, `bungalo`];
+// const TIMES = [`12:00`, `13:00`, `14:00`];
+// const FEATURES = [`wifi`, `dishwasher`, `parking`, `washer`, `elevator`, `conditioner`];
+// const PHOTOS = [
+//   `http://o0.github.io/assets/images/tokyo/hotel1.jpg`,
+//   `http://o0.github.io/assets/images/tokyo/hotel2.jpg`,
+//   `http://o0.github.io/assets/images/tokyo/hotel3.jpg`
+// ];
+// const ADVERT_COUNT = 8;
+// const PIN_OFSET_X = 25;
+// const PRICES = [0, 1000, 5000, 10000];
+// const ROOMS = [1, 2, 3, 100];
+// const PLACEMARK = {maxY: 630, minY: 130};
 
-const getRandomNumber = (max, min = 0) => {
-  return Math.floor(Math.random() * (max - min) + min);
-};
+// const getRandomNumber = (max, min = 0) => {
+//   return Math.floor(Math.random() * (max - min) + min);
+// };
 
 // const createAdvert = (count) => {
 //   const adverts = [];
@@ -53,7 +53,6 @@ const getRandomNumber = (max, min = 0) => {
 //   return adverts;
 // };
 
-const map = document.querySelector(`.map`);
 
 // // const adverts = createAdvert(ADVERT_COUNT);
 // const advertTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
@@ -75,27 +74,37 @@ const map = document.querySelector(`.map`);
 //   fragment.appendChild(renderAdvert(adverts[i]));
 // }
 // map.querySelector(`.map__pins`).appendChild(fragment);
-
-
-
+//
+//
+//
+const map = document.querySelector(`.map`);
 
 const noticeForm = document.querySelector(`.ad-form`);
 const filtersForm = map.querySelector(`.map__filters`);
 
-const toggleState = function(state = true) {
+const toggleState = function (state = true) {
   const fieldsNotice = Array.from(noticeForm.querySelectorAll(`fieldset`));
   const fieldsFilter = Array.from(filtersForm.querySelectorAll(`fieldset`));
   const selectsFilter = Array.from(filtersForm.querySelectorAll(`select`));
 
 
-  fieldsNotice.map((item) => item.disabled = state);
-  fieldsFilter.map((item) => item.disabled = state);
-  selectsFilter.map((item) => item.disabled = state);
+  fieldsNotice.map((item) => {
+    item.disabled = state;
+    return item;
+  });
+  fieldsFilter.map((item) => {
+    item.disabled = state;
+    return item;
+  });
+  selectsFilter.map((item) => {
+    item.disabled = state;
+    return item;
+  });
 };
 toggleState();
-
-
-
+//
+//
+//
 
 const pinMain = map.querySelector(`.map__pin--main`);
 // Как сделать так чтобы pinMain был сразу в фокусе при загрузке странице?
@@ -104,29 +113,29 @@ const PIN_MAIN_OFSET = 50;
 
 const setCoornate = () => {
   const adress = noticeForm.querySelector(`#address`);
-  const pinMainOy = parseInt(pinMain.style.top) - PIN_MAIN_OFSET;
-  const pinMainOx = parseInt(pinMain.style.left) - PIN_MAIN_OFSET;
+  const pinMainOy = parseInt(pinMain.style.top, 10) - PIN_MAIN_OFSET;
+  const pinMainOx = parseInt(pinMain.style.left, 10) - PIN_MAIN_OFSET;
   adress.value = `x: ${pinMainOx}, y: ${pinMainOy}`;
-}
+};
 setCoornate();
 
-
+//
 
 const activatePage = () => {
   pinMain.addEventListener(`mousedown`, (evt) => {
     evt.preventDefault();
-    evt.button === 0 ? toggleState(false) : null;
-
     setCoornate();
+
+    return evt.button === 0 ? toggleState(false) : null;
   });
 
   pinMain.addEventListener(`keydown`, (evt) => {
     evt.preventDefault();
-    evt.key === `Enter` ? toggleState(false) : null;
-  });
-}
-activatePage();
 
+    return evt.key === `Enter` ? toggleState(false) : null;
+  });
+};
+activatePage();
 
 
 const room = noticeForm.querySelector(`#room_number`);
@@ -134,44 +143,41 @@ const capacity = noticeForm.querySelector(`#capacity`);
 
 noticeForm.addEventListener(`input`, () => {
   validation();
-})
+});
 
 
 const validation = () => {
-  const roomInt = parseInt(room.value);
-  const capacityInt = parseInt(capacity.value);
+  const roomInt = parseInt(room.value, 10);
+  const capacityInt = parseInt(capacity.value, 10);
 
-  console.log(roomInt);
-  console.log(capacityInt);
+  // console.log(roomInt);
+  // console.log(capacityInt);
 
   if (roomInt === 1 && capacityInt !== 1) {
     room.setCustomValidity(`Попробуйте другой вариант 1`);
     capacity.setCustomValidity(`Попробуйте другой вариант 1`);
     capacity.style.border = `3px solid #ff6547`;
-    console.log(1);
+    // console.log(1);
 
-  }
-
-  else if (roomInt === 2 && capacityInt === 3 || capacityInt === 0) {
+  } else if (roomInt === 2 && capacityInt === 3 || capacityInt === 0) {
     room.setCustomValidity(`Попробуйте другой вариант 2`);
     capacity.setCustomValidity(`Попробуйте другой вариант 2`);
     capacity.style.border = `3px solid #ff6547`;
-    console.log(2);
+    // console.log(2);
 
   } else if (roomInt === 3 && capacityInt === 0) {
     room.setCustomValidity(`Попробуйте другой вариант 3`);
     capacity.setCustomValidity(`Попробуйте другой вариант 3`);
     capacity.style.border = `3px solid #ff6547`;
-    console.log(3);
+    // console.log(3);
 
-  } else if (roomInt === 100 && capacityInt !== 0 ) {
+  } else if (roomInt === 100 && capacityInt !== 0) {
     room.setCustomValidity(`Попробуйте другой вариант 4`);
     capacity.setCustomValidity(`Попробуйте другой вариант 4`);
     capacity.style.border = `3px solid #ff6547`;
-    console.log(4);
-  }
-  else {
+    // console.log(4);
+  } else {
     room.setCustomValidity(``);
     capacity.style.border = `none`;
   }
-}
+};
