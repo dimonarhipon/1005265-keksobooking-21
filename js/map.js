@@ -28,6 +28,7 @@
       item.disabled = state;
       return item;
     });
+    window.form.validation();
   };
   toggleState();
 
