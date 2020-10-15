@@ -26,16 +26,16 @@
       if (roomCount === 100 && capacityCount !== 0) {
         capacity.setCustomValidity(`Такой выбор соотвествует только варианту: не для гостей`);
         capacity.style.border = `3px solid #ff6547`;
-        console.log(roomCount, capacityCount, `A`);
+        // console.log(roomCount, capacityCount, `A`);
         return;
       }
       if (roomCount < capacityCount) {
         capacity.setCustomValidity(`Гостей должно быть меньше, чем комнат`);
         capacity.style.border = `3px solid #ff6547`;
-        console.log(roomCount, capacityCount, `B`);
+        // console.log(roomCount, capacityCount, `B`);
         return;
       }
-      console.log(roomCount, capacityCount, `C`);
+      // console.log(roomCount, capacityCount, `C`);
 
       room.setCustomValidity(``);
       room.reportValidity();
@@ -43,7 +43,7 @@
       capacity.style.border = `1px solid #d9d9d3`;
     },
   };
-
+  // window.form.validation();
   noticeForm.addEventListener(`input`, window.form.validation);
   // noticeForm.addEventListener(`invalid`, window.form.validation);
 })();
