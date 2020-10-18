@@ -2,33 +2,44 @@
 
 (function () {
   const ADVERT_COUNT = 8;
-  // const adverts = window.advert.create(ADVERT_COUNT);
 
   const fragment = document.createDocumentFragment();
 
-  const successHandler = (adverts) => {
+  const successHandler = (advert) => {
     for (let i = 0; i < ADVERT_COUNT; i++) {
-      fragment.appendChild(window.advert.render(adverts[i]));
+      fragment.appendChild(window.advert.updatePin(advert[i]));
+      fragment.appendChild(window.card.updateCard(advert[i]));
     }
     // Для провеки результата
-    // console.log(adverts);
-    window.map.querySelector(`.map__pins`).appendChild(fragment);
+    // console.log(advert);
+    window.pin.pinsCollection.appendChild(fragment);
   };
+  window.backend.load(successHandler, window.util.errorHandler);
 
-  const errorHandler = (errorMessage) => {
-    const node = document.createElement(`div`);
-    node.style = `z-index: 5; margin: 0 auto; text-align: center; background-color: tomato;`;
-    node.style.position = `absolute`;
-    node.style.width = `400px`;
-    node.style.height = `80px`;
-    node.style.color = `#ffffff`;
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = `28px`;
 
-    node.textContent = errorMessage;
-    document.body.insertAdjacentElement(`afterbegin`, node);
+  window.toggleState = (state = true) => {
+    window.map.placeAdvert.classList.add(`map--faded`);
+    window.form.noticeForm.classList.add(`ad-form--disabled`);
+    if (state === false) {
+      window.map.placeAdvert.classList.remove(`map--faded`);
+      window.form.noticeForm.classList.remove(`ad-form--disabled`);
+    }
+
+    window.form.fieldsNotice.map((item) => {
+      item.disabled = state;
+      return item;
+    });
+    window.mapFilter.fieldsFilter.map((item) => {
+      item.disabled = state;
+      return item;
+    });
+    window.mapFilter.selectsFilter.map((item) => {
+      item.disabled = state;
+      return item;
+    });
   };
-  window.backend.load(successHandler, errorHandler);
+  window.toggleState();
+
+
 })();
 
