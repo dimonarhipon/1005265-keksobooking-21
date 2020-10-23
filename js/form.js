@@ -1,48 +1,53 @@
-"use strict";
+'use strict';
 
 (function () {
   const MAX_ROOMS = 100;
   const MIN_CAPACITY = 0;
 
-  const noticeForm = document.querySelector(`.ad-form`);
+  const container = document.querySelector(`.ad-form`);
 
-  const room = noticeForm.querySelector(`#room_number`);
-  const capacity = noticeForm.querySelector(`#capacity`);
-  const address = noticeForm.querySelector(`#address`);
+  const roomSelect = container.querySelector(`#room_number`);
+  const capacitySelect = container.querySelector(`#capacity`);
+  const address = container.querySelector(`#address`);
+
+
+  const validate = () => {
+    const roomCount = parseInt(roomSelect.value, 10);
+    const capacityCount = parseInt(capacitySelect.value, 10);
+
+    if (roomCount === MAX_ROOMS && capacityCount !== MIN_CAPACITY) {
+      capacitySelect.setCustomValidity(`Такой выбор соотвествует только варианту: не для гостей`);
+      return;
+    }
+    if (roomCount !== MAX_ROOMS && capacityCount === MIN_CAPACITY) {
+      capacitySelect.setCustomValidity(`Такой выбор соотвествует только варианту: не для гостей`);
+      return;
+    }
+    if (roomCount < capacityCount) {
+      capacitySelect.setCustomValidity(`Гостей должно быть меньше, чем комнат`);
+      return;
+    }
+
+    capacitySelect.setCustomValidity(``);
+    capacitySelect.style.border = `1px solid #d9d9d3`;
+  };
+
+  validate();
+  // container.addEventListener(`invalid`, window.form.validate);
+
+  roomSelect.addEventListener(`change`, () => {
+    validate();
+    roomSelect.reportValidity();
+  });
+  capacitySelect.addEventListener(`change`, () => {
+    validate();
+    capacitySelect.reportValidity();
+  });
 
   window.form = {
-    noticeForm,
+    container,
     address,
-    fieldsNotice: Array.from(noticeForm.querySelectorAll(`fieldset`)),
-
-    // С валидация сложнейшая тема для меня
-    validation: () => {
-      const roomCount = parseInt(room.value, 10);
-      const capacityCount = parseInt(capacity.value, 10);
-
-      if (roomCount === MAX_ROOMS && capacityCount !== MIN_CAPACITY) {
-        capacity.setCustomValidity(`Такой выбор соотвествует только варианту: не для гостей`);
-        // capacity.style.border = `3px solid #ff6547`;
-        // console.log(roomCount, capacityCount, `A`);
-        return;
-      }
-      if (roomCount < capacityCount) {
-        capacity.setCustomValidity(`Гостей должно быть меньше, чем комнат`);
-        // capacity.style.border = `3px solid #ff6547`;
-        // console.log(roomCount, capacityCount, `B`);
-        return;
-      }
-      // console.log(roomCount, capacityCount, `C`);
-
-      room.setCustomValidity(``);
-      capacity.style.border = `1px solid #d9d9d3`;
-    },
+    fieldsets: Array.from(container.querySelectorAll(`fieldset`)),
+    validate: validate,
   };
-  window.form.validation();
-
-  noticeForm.addEventListener(`invalid`, window.form.validation);
-  noticeForm.addEventListener(`change`, () => {
-    room.reportValidity();
-    capacity.reportValidity();
-  });
 })();

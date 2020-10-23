@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 (function () {
   const URL_GET = `https://21.javascript.pages.academy/keksobooking/data`;
