@@ -65,7 +65,6 @@
       } else if (leftPin > LIMIT_RIGHT) {
         leftPin = shift.x + `px`;
       }
-      console.log(topPin, leftPin);
       pinMain.style.top = topPin + `px`;
       pinMain.style.left = leftPin + `px`;
       setCoordinate(leftPin, topPin + pinMainHeight);
