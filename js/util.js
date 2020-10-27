@@ -19,5 +19,42 @@
       node.textContent = errorMessage;
       document.body.insertAdjacentElement(`afterbegin`, node);
     },
+    successSubmit: () => {
+      const container = document.querySelector(`.ad-form`);
+      const successTemplate = document.querySelector(`#success`).content;
+      const success = successTemplate.querySelector(`.success`);
+      document.body.insertAdjacentElement(`afterbegin`, success);
+      container.reset();
+      window.toggleState(false);
+
+      document.addEventListener(`click`, () => {
+        success.style.display = `none`;
+      });
+      document.addEventListener(`keydown`, (evt) => {
+        if (evt.key === `Escape`) {
+          evt.preventDefault();
+          success.style.display = `none`;
+        }
+      });
+    },
+    errorSubmit: () => {
+      const errorTemplate = document.querySelector(`#error`).content;
+      const error = errorTemplate.querySelector(`.error`);
+      const errorButton = errorTemplate.querySelector(`.error__button`);
+      document.body.insertAdjacentElement(`afterbegin`, error);
+
+      document.addEventListener(`click`, () => {
+        error.style.display = `none`;
+      });
+      document.addEventListener(`keydown`, (evt) => {
+        if (evt.key === `Escape`) {
+          evt.preventDefault();
+          error.style.display = `none`;
+        }
+      });
+      errorButton.addEventListener(`click`, () => {
+        error.style.display = `none`;
+      });
+    },
   };
 })();

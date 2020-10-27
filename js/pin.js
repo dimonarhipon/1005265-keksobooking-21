@@ -18,6 +18,8 @@
   pinMain.focus();
 
   const setCoordinate = (x = pinMainOx, y = pinMainOy) => {
+    x = parseInt(x, 10);
+    y = parseInt(y, 10);
     window.form.address.value = `${x}, ${y}`;
   };
   setCoordinate();
@@ -29,11 +31,11 @@
       window.toggleState(false);
     }
 
+    let dragged = false;
     let startCoords = {
       x: evt.clientX,
       y: evt.clientY
     };
-    let dragged = false;
 
     const onMouseMove = (moveEvt) => {
       moveEvt.preventDefault();
@@ -49,27 +51,29 @@
         y: moveEvt.clientY
       };
 
-      const topPin = pinMain.offsetTop - shift.y;
-      const leftPin = pinMain.offsetLeft - shift.x;
+      pinMain.style.zIndex = 2;
+      let topPin = pinMain.offsetTop - shift.y;
+      let leftPin = pinMain.offsetLeft - shift.x;
 
       if (topPin < LIMIT_TOP) {
-        topPin = LIMIT_TOP;
+        topPin = shift.y + `px`;
       } else if (topPin > LIMIT_BOTTOM) {
-        topPin = LIMIT_BOTTOM;
+        topPin = shift.y + `px`;
       }
       if (leftPin < LIMIT_LEFT) {
-        leftPin = LIMIT_LEFT;
+        leftPin = shift.x + `px`;
       } else if (leftPin > LIMIT_RIGHT) {
-        leftPin = LIMIT_RIGHT;
+        leftPin = shift.x + `px`;
       }
-
+      console.log(topPin, leftPin);
       pinMain.style.top = topPin + `px`;
       pinMain.style.left = leftPin + `px`;
-      setCoordinate(leftPin, topPin);
+      setCoordinate(leftPin, topPin + pinMainHeight);
     };
 
     const onMouseUp = (upEvt) => {
       upEvt.preventDefault();
+      // setCoordinate(pinMainOx, pinMainOy + pinMainHeight);
 
       pinMain.removeEventListener(`mousemove`, onMouseMove);
       pinMain.removeEventListener(`mouseup`, onMouseUp);
