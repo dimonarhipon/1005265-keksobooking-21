@@ -4,11 +4,11 @@
   const MAX_ROOMS = 100;
   const MIN_CAPACITY = 0;
 
-  const container = document.querySelector(`.ad-form`);
-
-  const roomSelect = container.querySelector(`#room_number`);
-  const capacitySelect = container.querySelector(`#capacity`);
-  const address = container.querySelector(`#address`);
+  const form = document.querySelector(`.ad-form`);
+  const roomSelect = form.querySelector(`#room_number`);
+  const capacitySelect = form.querySelector(`#capacity`);
+  const address = form.querySelector(`#address`);
+  const resetButton = form.querySelector(`.ad-form__reset`);
 
 
   const validate = () => {
@@ -32,9 +32,6 @@
     capacitySelect.style.border = `1px solid #d9d9d3`;
   };
 
-  validate();
-  // container.addEventListener(`invalid`, window.form.validate);
-
   roomSelect.addEventListener(`change`, () => {
     validate();
     roomSelect.reportValidity();
@@ -44,10 +41,29 @@
     capacitySelect.reportValidity();
   });
 
+  const successSubmitHandler = () => {
+    window.util.openSuccessPopup();
+    window.map.toggleState(false);
+    form.reset();
+  };
+
+  const resetHandler = (evt) => {
+    evt.preventDefault();
+    form.reset();
+  };
+  const submitHandler = (evt) => {
+    window.backend.post(new FormData(form), successSubmitHandler, window.util.openErrorPopup);
+    evt.preventDefault();
+  };
+
+
+  validate();
+  resetButton.addEventListener(`reset`, resetHandler);
+  form.addEventListener(`submit`, submitHandler);
+
   window.form = {
-    container,
+    container: form,
     address,
-    fieldsets: Array.from(container.querySelectorAll(`fieldset`)),
-    validate: validate,
+    fieldsets: Array.from(form.querySelectorAll(`fieldset`)),
   };
 })();
