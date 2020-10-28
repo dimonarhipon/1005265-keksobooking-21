@@ -48,7 +48,6 @@
           successElement.style.display = `none`;
         }
       });
-      console.log(1);
     },
     openErrorPopup: () => {
       const errorElement = errorTemplate.cloneNode(true);
@@ -66,7 +65,6 @@
       errorButton.addEventListener(`click`, () => {
         errorElement.style.display = `none`;
       });
-      console.log(2);
     },
   };
 })();
