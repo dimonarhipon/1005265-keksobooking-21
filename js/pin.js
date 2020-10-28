@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 (function () {
   const LIMIT_TOP = 170;
@@ -6,8 +6,8 @@
   const LIMIT_LEFT = -32;
   const LIMIT_RIGHT = 1168;
 
-  window.pinContainer = window.map.querySelector(`.map__pins`);
-  const pinMain = window.map.querySelector(`.map__pin--main`);
+  window.pinContainer = window.map.workSpace.querySelector(`.map__pins`);
+  const pinMain = window.map.workSpace.querySelector(`.map__pin--main`);
 
   const pinMainWidth = Math.floor(pinMain.offsetWidth / 2);
   const pinMainHeight = Math.floor(pinMain.offsetHeight / 2);
@@ -24,11 +24,14 @@
   };
   setCoordinate();
 
+
   pinMain.addEventListener(`mousedown`, (evt) => {
     evt.preventDefault();
+    window.backend.load(window.util.successHandler, window.util.errorHandler);
+
     setCoordinate(pinMainOx, pinMainOy + pinMainHeight);
     if (evt.button === 0) {
-      window.toggleState(false);
+      window.map.toggleState(false);
     }
 
     let dragged = false;
@@ -36,6 +39,8 @@
       x: evt.clientX,
       y: evt.clientY
     };
+    let topPin;
+    let leftPin;
 
     const onMouseMove = (moveEvt) => {
       moveEvt.preventDefault();
@@ -45,37 +50,36 @@
         x: startCoords.x - moveEvt.clientX,
         y: startCoords.y - moveEvt.clientY
       };
-
       startCoords = {
         x: moveEvt.clientX,
         y: moveEvt.clientY
       };
 
       pinMain.style.zIndex = 2;
-      let topPin = pinMain.offsetTop - shift.y;
-      let leftPin = pinMain.offsetLeft - shift.x;
+      topPin = pinMain.offsetTop - shift.y;
+      leftPin = pinMain.offsetLeft - shift.x;
 
       if (topPin < LIMIT_TOP) {
-        topPin = shift.y + `px`;
+        topPin = LIMIT_TOP;
       } else if (topPin > LIMIT_BOTTOM) {
-        topPin = shift.y + `px`;
+        topPin = LIMIT_BOTTOM;
       }
       if (leftPin < LIMIT_LEFT) {
-        leftPin = shift.x + `px`;
+        leftPin = LIMIT_LEFT;
       } else if (leftPin > LIMIT_RIGHT) {
-        leftPin = shift.x + `px`;
+        leftPin = LIMIT_RIGHT;
       }
       pinMain.style.top = topPin + `px`;
       pinMain.style.left = leftPin + `px`;
-      setCoordinate(leftPin, topPin + pinMainHeight);
+      setCoordinate(leftPin + pinMainWidth, topPin + pinMainHeight);
     };
 
     const onMouseUp = (upEvt) => {
       upEvt.preventDefault();
-      // setCoordinate(pinMainOx, pinMainOy + pinMainHeight);
+      setCoordinate(leftPin + pinMainWidth, topPin + pinMainHeight);
 
-      pinMain.removeEventListener(`mousemove`, onMouseMove);
-      pinMain.removeEventListener(`mouseup`, onMouseUp);
+      document.removeEventListener(`mousemove`, onMouseMove);
+      document.removeEventListener(`mouseup`, onMouseUp);
 
       if (dragged) {
         const onClickPreventDefault = (clickEvt) => {
@@ -86,8 +90,8 @@
       }
     };
 
-    pinMain.addEventListener(`mousemove`, onMouseMove);
-    pinMain.addEventListener(`mouseup`, onMouseUp);
+    document.addEventListener(`mousemove`, onMouseMove);
+    document.addEventListener(`mouseup`, onMouseUp);
   });
 
   pinMain.addEventListener(`keydown`, (evt) => {
