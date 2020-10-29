@@ -6,32 +6,55 @@
   const LIMIT_LEFT = -32;
   const LIMIT_RIGHT = 1168;
 
-  window.pinContainer = window.map.workSpace.querySelector(`.map__pins`);
+  let isStatePage = false;
+  const pinContainer = window.map.workSpace.querySelector(`.map__pins`);
   const pinMain = window.map.workSpace.querySelector(`.map__pin--main`);
-
   const pinMainWidth = Math.floor(pinMain.offsetWidth / 2);
   const pinMainHeight = Math.floor(pinMain.offsetHeight / 2);
-
   const pinMainOx = pinMain.offsetLeft + pinMainWidth;
   const pinMainOy = pinMain.offsetTop + pinMainHeight;
 
-  pinMain.focus();
 
   const setCoordinate = (x = pinMainOx, y = pinMainOy) => {
     x = parseInt(x, 10);
     y = parseInt(y, 10);
     window.form.address.value = `${x}, ${y}`;
   };
-  setCoordinate();
 
+  const getPins = () => {
+    window.backend.load(window.util.successHandler, window.util.errorHandler);
+    setTimeout(pinsHandler, 500);
+  };
+
+  const pinsHandler = () => {
+    const mapPins = Array.from(pinContainer.querySelectorAll(`.map__pin:not(.map__pin--main)`));
+    const popups = Array.from(window.map.workSpace.querySelectorAll(`.popup`));
+
+    // Не могу додумать как показывать только 1 карточку
+    for (let i = 0; i < mapPins.length; i++) {
+      mapPins[i].addEventListener(`click`, () => {
+        window.util.onPopupOpen(popups[i]);
+
+        document.addEventListener(`keydown`, (evt) => {
+          window.util.onPopupEscPress(evt, popups[i]);
+        });
+
+        const close = popups[i].querySelector(`.popup__close`);
+        close.addEventListener(`click`, () => {
+          window.util.onPopupClose(popups[i]);
+        });
+      });
+    }
+
+
+  };
 
   pinMain.addEventListener(`mousedown`, (evt) => {
     evt.preventDefault();
-    window.backend.load(window.util.successHandler, window.util.errorHandler);
-
     setCoordinate(pinMainOx, pinMainOy + pinMainHeight);
+
     if (evt.button === 0) {
-      window.map.toggleState(false);
+      window.map.disablePage(false);
     }
 
     let dragged = false;
@@ -76,6 +99,10 @@
 
     const onMouseUp = (upEvt) => {
       upEvt.preventDefault();
+      if (!isStatePage) {
+        getPins();
+        isStatePage = true;
+      }
       setCoordinate(leftPin + pinMainWidth, topPin + pinMainHeight);
 
       document.removeEventListener(`mousemove`, onMouseMove);
@@ -95,10 +122,21 @@
   });
 
   pinMain.addEventListener(`keydown`, (evt) => {
+    if (!isStatePage) {
+      getPins();
+      isStatePage = true;
+    }
     setCoordinate(pinMainOx, pinMainOy + pinMainHeight);
     if (evt.key === `Enter`) {
-      window.toggleState(false);
+      window.map.disablePage(false);
     }
   });
 
+  pinMain.focus();
+  setCoordinate();
+
+  window.pin = {
+    container: pinContainer,
+    isStatePage,
+  };
 })();

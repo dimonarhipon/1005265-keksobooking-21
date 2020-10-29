@@ -4,7 +4,7 @@
   const map = document.querySelector(`.map`);
 
 
-  const toggleState = (state = true) => {
+  const disablePage = (state = true) => {
     map.classList.add(`map--faded`);
     window.form.container.classList.add(`ad-form--disabled`);
 
@@ -19,6 +19,6 @@
 
   window.map = {
     workSpace: map,
-    toggleState,
+    disablePage,
   };
 })();

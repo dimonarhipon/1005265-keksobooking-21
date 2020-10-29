@@ -60,6 +60,8 @@
       description.textContent = advert.offer.description;
       renderPhotosElement(advert);
 
+      window.util.onPopupClose(cardElement);
+
       return cardElement;
     },
   };

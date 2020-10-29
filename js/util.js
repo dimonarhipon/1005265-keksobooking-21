@@ -2,7 +2,8 @@
 
 (function () {
   const ADVERT_COUNT = 8;
-  const fragment = document.createDocumentFragment();
+  const fragmentAdvert = document.createDocumentFragment();
+  const fragmentCard = document.createDocumentFragment();
   const successTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
   const errorTemplate = document.querySelector(`#error`).content.querySelector(`.error`);
   const errorButton = errorTemplate.querySelector(`.error__button`);
@@ -14,12 +15,11 @@
     },
     successHandler: (advert) => {
       for (let i = 0; i < ADVERT_COUNT; i++) {
-        fragment.appendChild(window.advert.render(advert[i]));
+        fragmentAdvert.appendChild(window.advert.render(advert[i]));
+        fragmentCard.appendChild(window.card.render(advert[i]));
       }
-      // Для провеки результата
-      // console.log(advert);
-      // fragment.appendChild(window.card.render(advert[i]));
-      window.pinContainer.appendChild(fragment);
+      window.map.workSpace.appendChild(fragmentCard);
+      window.pin.container.appendChild(fragmentAdvert);
     },
     errorHandler: (errorMessage) => {
       const node = document.createElement(`div`);
@@ -66,5 +66,18 @@
         errorElement.style.display = `none`;
       });
     },
+    onPopupClose: (item) => {
+      item.classList.add(`hidden`);
+    },
+    onPopupOpen: (item) => {
+      item.classList.remove(`hidden`);
+    },
+    onPopupEscPress: (evt, item) => {
+      if (evt.key === `Escape`) {
+        evt.preventDefault();
+        item.classList.add(`hidden`);
+      }
+    },
+
   };
 })();
