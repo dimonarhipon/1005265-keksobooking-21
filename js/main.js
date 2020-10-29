@@ -2,6 +2,6 @@
 
 (function () {
 
-  window.map.toggleState();
+  window.map.disablePage();
 })();
 
