@@ -26,39 +26,6 @@
 
 
   const validate = () => {
-    titleInput.maxLength = MAX_LENGTH_TITLE;
-    titleInput.minLength = MIN_LENGTH_TITLE;
-    titleInput.required = true;
-    const titleLenght = titleInput.value.length;
-
-    if (titleInput.validity.tooShort) {
-      titleInput.setCustomValidity(`Нужно больше 30 символов. Сейчас: ${titleLenght}`);
-    } else if (titleInput.validity.tooLong) {
-      titleInput.setCustomValidity(`Нужно меньше 100 символов. Сейчас: ${titleLenght}`);
-    } else if (titleInput.validity.valueMissing) {
-      titleInput.setCustomValidity(`Нужно написать заголовок`);
-    } else {
-      titleInput.setCustomValidity(``);
-    }
-
-    const minPrice = BuildingMinPrice[typeHouse.value.toUpperCase()];
-    priceInput.min = minPrice;
-    priceInput.placeholder = minPrice.toString();
-
-    priceInput.required = true;
-    priceInput.min = 0;
-    priceInput.max = 1000000;
-
-    if (priceInput.validity.valueMissing) {
-      priceInput.setCustomValidity(`Нужно установить цену`);
-    } else if (priceInput.validity.typeMismatch) {
-      priceInput.setCustomValidity(`Вводите число`);
-    } else if (priceInput.validity.rangeOverflow) {
-      priceInput.setCustomValidity(`Слишком много, надо меньше 1000001`);
-    } else {
-      priceInput.setCustomValidity(``);
-    }
-
 
     const roomCount = parseInt(roomSelect.value, 10);
     const capacityCount = parseInt(capacitySelect.value, 10);
@@ -78,16 +45,40 @@
   };
 
   titleInput.addEventListener(`input`, () => {
-    validate();
-    titleInput.reportValidity();
+    titleInput.maxLength = MAX_LENGTH_TITLE;
+    titleInput.minLength = MIN_LENGTH_TITLE;
+    titleInput.required = true;
+    const titleLenght = titleInput.value.length;
+
+    if (titleInput.validity.tooShort) {
+      titleInput.setCustomValidity(`Нужно больше 30 символов. Сейчас: ${titleLenght}`);
+    } else if (titleInput.validity.tooLong) {
+      titleInput.setCustomValidity(`Нужно меньше 100 символов. Сейчас: ${titleLenght}`);
+    } else if (titleInput.validity.valueMissing) {
+      titleInput.setCustomValidity(`Нужно написать заголовок`);
+    } else {
+      titleInput.setCustomValidity(``);
+    }
   });
   typeHouse.addEventListener(`change`, () => {
-    validate();
+    const minPrice = BuildingMinPrice[typeHouse.value.toUpperCase()];
+    priceInput.min = minPrice;
+    priceInput.placeholder = minPrice.toString();
     typeHouse.reportValidity();
   });
   priceInput.addEventListener(`invalid`, () => {
-    validate();
-    priceInput.reportValidity();
+    priceInput.required = true;
+    priceInput.max = 1000000;
+
+    if (priceInput.validity.valueMissing) {
+      priceInput.setCustomValidity(`Нужно установить цену`);
+    } else if (priceInput.validity.typeMismatch) {
+      priceInput.setCustomValidity(`Вводите число`);
+    } else if (priceInput.validity.rangeOverflow) {
+      priceInput.setCustomValidity(`Слишком много, надо меньше 1000001`);
+    } else {
+      priceInput.setCustomValidity(``);
+    }
   });
   roomSelect.addEventListener(`change`, () => {
     validate();
