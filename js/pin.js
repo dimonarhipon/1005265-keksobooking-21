@@ -51,7 +51,7 @@
       fragmentAdvert.appendChild(window.advert.render(advert[i]));
     }
     window.pin.container.appendChild(fragmentAdvert);
-
+    getCard();
   };
 
   const popupSuccessHandler = (card) => {
@@ -77,7 +77,7 @@
   };
   const activatePage = () => {
     if (!isPageActivated) {
-      getPins();getCard();
+      getPins();
       isPageActivated = true;
     }
   };
