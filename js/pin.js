@@ -29,55 +29,60 @@
   };
 
 
-  const onPinClick = () => {
-    const popup = window.map.workSpace.querySelector(`.popup`);
-    const closePopup = popup.querySelector(`.popup__close`);
+  const onPinClick = (i) => {
+    const popups = Array.from(window.map.workSpace.querySelectorAll(`.popup`));
+    popups.forEach((item) => item.classList.add(`hidden`));
 
-    document.addEventListener(`keydown`, () => popup.remove());
-    closePopup.addEventListener(`click`, () => popup.remove());
+    const closePopup = popups[i].querySelector(`.popup__close`);
+    popups[i].classList.remove(`hidden`);
+
+    document.addEventListener(`keydown`, () => popups[i].classList.add(`hidden`));
+    closePopup.addEventListener(`click`, () => popups[i].classList.add(`hidden`));
   };
-  const removePopup = () => {
-    const popup = window.map.workSpace.querySelector(`.map__card`);
-    if (popup !== null) {
-      popup.remove();
-    }
+
+  const removePopups = () => {
+    const popups = window.map.workSpace.querySelectorAll(`.map__card`);
+    popups.forEach((item) => item.remove());
+  };
+  const hiddenPopups = () => {
+    const popups = Array.from(window.map.workSpace.querySelectorAll(`.map__card`));
+    popups.map((item) => item.classList.add(`hidden`));
   };
 
 
   const pinSuccessHandler = (advert) => {
     window.mapFilter.activate(advert);
-
     for (let i = 0; i < PINS_LIMIT; i++) {
       fragmentAdvert.appendChild(window.advert.render(advert[i]));
+      fragmentCard.appendChild(window.card.render(advert[i]));
     }
     window.pin.container.appendChild(fragmentAdvert);
-    getCard();
+    window.map.workSpace.appendChild(fragmentCard);
+    hiddenPopups();
   };
 
   const popupSuccessHandler = (card) => {
-    const mapPins = Array.from(pinContainer.querySelectorAll(`.map__pin:not(.map__pin--main)`));
     window.mapFilter.activate(card);
+
+    const mapPins = Array.from(pinContainer.querySelectorAll(`.map__pin:not(.map__pin--main)`));
     for (let i = 0; i < mapPins.length; i++) {
       mapPins[i].addEventListener(`click`, () => {
-        removePopup();
-        fragmentCard.appendChild(window.card.render(card[i]));
-        window.map.workSpace.appendChild(fragmentCard);
-        onPinClick();
+
+        onPinClick(i);
       });
     }
   };
 
   const getPins = () => {
-    console.log(`pins`);
     return window.backend.load(pinSuccessHandler, window.util.errorHandler);
   };
   const getCard = () => {
-    console.log(`card`);
     return window.backend.load(popupSuccessHandler, window.util.errorHandler);
   };
   const activatePage = () => {
     if (!isPageActivated) {
       getPins();
+      getCard();
       isPageActivated = true;
     }
   };
@@ -167,6 +172,6 @@
     isPageActivated,
     render: pinSuccessHandler,
     remove: removePins,
-    deletePopup: removePopup
+    deletePopups: removePopups
   };
 })();

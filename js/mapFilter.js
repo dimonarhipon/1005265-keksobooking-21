@@ -2,6 +2,7 @@
 
 (function () {
   const PINS_LIMIT = 5;
+  let data = [];
   let filterData = [];
 
   const filterForm = window.map.workSpace.querySelector(`.map__filters`);
@@ -13,16 +14,18 @@
   const filtrationByType = (item) => {
     return filterItem(typeSelect, item.offer, `type`);
   };
-  const onFilterChange = (data) => {
+  const onFilterChange = (item) => {
+    data = item;
     window.pin.remove();
-    // window.pin.deletePopup();
+    window.pin.deletePopups();
+    filterData = data;
     filterData = data.filter(filtrationByType).concat(data);
     window.pin.render(filterData.slice(0, PINS_LIMIT));
   };
 
-  const activateFilter = (data) => {
+  const activateFilter = (item) => {
     filterForm.addEventListener(`change`, () => {
-      onFilterChange(data);
+      onFilterChange(item);
     });
   };
 
