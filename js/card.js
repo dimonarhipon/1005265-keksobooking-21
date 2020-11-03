@@ -59,8 +59,7 @@
       renderFeaturesElement(advert);
       description.textContent = advert.offer.description;
       renderPhotosElement(advert);
-
-      window.util.onPopupClose(cardElement);
+      cardElement.classList.add(`hidden`);
 
       return cardElement;
     },
