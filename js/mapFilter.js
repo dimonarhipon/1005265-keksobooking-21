@@ -1,7 +1,6 @@
 "use strict";
 
 (function () {
-  // const PINS_LIMIT = 10;
   let data = [];
   let filterData = [];
 
@@ -19,7 +18,6 @@
     data = item;
     window.pin.remove();
     window.pin.deletePopups();
-    // const filterData = data.filter((element) => element.offer.type === typeSelect.value);
 
     filterData = data.filter(filtrationByType).concat(data);
     const uniqData = filterData.filter((elem, index) => {
