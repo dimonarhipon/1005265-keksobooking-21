@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
 (function () {
-  const PINS_LIMIT = 5;
+  // const PINS_LIMIT = 10;
   let data = [];
   let filterData = [];
 
@@ -14,21 +14,26 @@
   const filtrationByType = (item) => {
     return filterItem(typeSelect, item.offer, `type`);
   };
-  const onFilterChange = (item) => {
+
+  const filterElement = (item) => {
     data = item;
     window.pin.remove();
     window.pin.deletePopups();
-    filterData = data;
+    // const filterData = data.filter((element) => element.offer.type === typeSelect.value);
+
     filterData = data.filter(filtrationByType).concat(data);
-    window.pin.render(filterData.slice(0, PINS_LIMIT));
+    const uniqData = filterData.filter((elem, index) => {
+      return filterData.indexOf(elem) === index;
+    });
+    window.pin.update(uniqData);
+    window.pin.renderCard(uniqData);
   };
 
   const activateFilter = (item) => {
     filterForm.addEventListener(`change`, () => {
-      onFilterChange(item);
+      filterElement(item);
     });
   };
-
 
   window.mapFilter = {
     fieldsets: Array.from(filterForm.querySelectorAll(`fieldset`)),

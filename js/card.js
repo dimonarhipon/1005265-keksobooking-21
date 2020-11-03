@@ -59,7 +59,7 @@
       renderFeaturesElement(advert);
       description.textContent = advert.offer.description;
       renderPhotosElement(advert);
-
+      cardElement.classList.add(`hidden`);
 
       return cardElement;
     },
