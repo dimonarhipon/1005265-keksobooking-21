@@ -24,16 +24,18 @@
     window.form.address.value = `${x}, ${y}`;
   };
 
-  const updatePin = (advert) => {
-    for (let i = 0; i < PINS_LIMIT; i++) {
-      fragmentAdvert.appendChild(window.advert.render(advert[i]));
+  const updatePin = (adverts) => {
+    const count = adverts.length > PINS_LIMIT ? PINS_LIMIT : adverts.length;
+    for (let i = 0; i < count; i++) {
+      fragmentAdvert.appendChild(window.advert.render(adverts[i]));
     }
     window.pin.container.appendChild(fragmentAdvert);
     openPopup();
   };
-  const updateCard = (card) => {
-    for (let i = 0; i < PINS_LIMIT; i++) {
-      fragmentCard.appendChild(window.card.render(card[i]));
+  const updateCard = (cards) => {
+    const count = cards.length > PINS_LIMIT ? PINS_LIMIT : cards.length;
+    for (let i = 0; i < count; i++) {
+      fragmentCard.appendChild(window.card.render(cards[i]));
     }
     window.pin.container.appendChild(fragmentCard);
   };
@@ -50,12 +52,17 @@
 
   const onPinClick = (i) => {
     const popups = Array.from(window.map.workSpace.querySelectorAll(`.popup`));
-    popups.forEach((item) => item.classList.add(`hidden`));
-
     const closePopup = popups[i].querySelector(`.popup__close`);
+
+    popups.forEach((item) => item.classList.add(`hidden`));
     popups[i].classList.remove(`hidden`);
 
-    document.addEventListener(`keydown`, () => popups[i].classList.add(`hidden`));
+    document.addEventListener(`keydown`, (evt) => {
+      if (evt.key === `Escape`) {
+        evt.preventDefault();
+        popups[i].classList.add(`hidden`);
+      }
+    });
     closePopup.addEventListener(`click`, () => popups[i].classList.add(`hidden`));
   };
   const openPopup = () => {
@@ -80,16 +87,16 @@
   const getPins = () => {
     return window.backend.load(pinSuccessHandler, window.util.errorHandler);
   };
-  const getCard = () => {
+  const getCards = () => {
     return window.backend.load(popupSuccessHandler, window.util.errorHandler);
   };
 
   const activatePage = () => {
     if (!isPageActivated) {
-      getPins();
-      getCard();
       isPageActivated = true;
     }
+    getPins();
+    getCards();
   };
 
   pinMain.addEventListener(`mousedown`, (evt) => {

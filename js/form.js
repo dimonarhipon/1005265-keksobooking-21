@@ -3,8 +3,6 @@
 (function () {
   const MAX_ROOMS = 100;
   const MIN_CAPACITY = 0;
-  const MAX_LENGTH_TITLE = 100;
-  const MIN_LENGTH_TITLE = 30;
 
   const BuildingMinPrice = {
     BUNGALOW: 0,
@@ -45,9 +43,6 @@
   };
 
   titleInput.addEventListener(`input`, () => {
-    titleInput.maxLength = MAX_LENGTH_TITLE;
-    titleInput.minLength = MIN_LENGTH_TITLE;
-    titleInput.required = true;
     const titleLenght = titleInput.value.length;
 
     if (titleInput.validity.tooShort) {
@@ -67,8 +62,6 @@
     typeHouse.reportValidity();
   });
   priceInput.addEventListener(`invalid`, () => {
-    priceInput.required = true;
-    priceInput.max = 1000000;
 
     if (priceInput.validity.valueMissing) {
       priceInput.setCustomValidity(`Нужно установить цену`);

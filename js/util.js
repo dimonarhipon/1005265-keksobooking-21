@@ -1,12 +1,8 @@
-"use strict";
+'use strict';
 
 (function () {
-  const successTemplate = document
-    .querySelector(`#success`)
-    .content.querySelector(`.success`);
-  const errorTemplate = document
-    .querySelector(`#error`)
-    .content.querySelector(`.error`);
+  const successTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
+  const errorTemplate = document.querySelector(`#error`).content.querySelector(`.error`);
   const errorButton = errorTemplate.querySelector(`.error__button`);
 
   window.util = {
@@ -58,5 +54,8 @@
         errorElement.style.display = `none`;
       });
     },
+    debounce: (items) => {
+      setTimeout(items, 500);
+    }
   };
 })();
