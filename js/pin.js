@@ -22,7 +22,6 @@
   const setCoordinate = (x = pinMainOx, y = pinMainOy) => {
     x = parseInt(x, 10);
     y = parseInt(y, 10);
-    console.log(x, y);
     window.form.address.value = `${x}, ${y}`;
   };
 
