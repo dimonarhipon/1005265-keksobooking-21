@@ -92,8 +92,10 @@
 
   const successSubmitHandler = () => {
     window.util.openSuccessPopup();
-    window.map.disablePage();
+    window.pin.removeElements();
     form.reset();
+    window.map.disablePage();
+    // window.pin.isLoad = true;
   };
 
   const resetHandler = (evt) => {

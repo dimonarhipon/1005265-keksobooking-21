@@ -22,44 +22,43 @@
   const guestsSelect = filterForm.querySelector(`#housing-guests`);
   const featuresFieldset = filterForm.querySelector(`#housing-features`);
 
-  const filterItem = (elem, item, key) => {
-    return elem.value === `any` ? true : elem.value === item[key].toString();
+  const filterItem = (item, element, key) => {
+    return item.value === `any` ? true : item.value === element[key].toString();
   };
-  const filtrationByType = (item) => {
-    return filterItem(typeSelect, item.offer, `type`);
+  const filtrationByType = (element) => {
+    return filterItem(typeSelect, element.offer, `type`);
   };
-  const filtrationByPrice = (item) => {
+  const filtrationByPrice = (element) => {
     const filterPrice = PriceRange[priceSelect.value.toUpperCase()];
 
-    return filterPrice ? item.offer.price >= filterPrice.min && item.offer.price <= filterPrice.max : true;
+    return filterPrice ? element.offer.price >= filterPrice.min && element.offer.price <= filterPrice.max : true;
   };
-  const filtrationByRooms = (item) => {
-    return filterItem(roomsSelect, item.offer, `rooms`);
+  const filtrationByRooms = (element) => {
+    return filterItem(roomsSelect, element.offer, `rooms`);
   };
-  const filtrationByGuests = (item) => {
-    return filterItem(guestsSelect, item.offer, `guests`);
+  const filtrationByGuests = (element) => {
+    return filterItem(guestsSelect, element.offer, `guests`);
   };
-  const filtrationByFeatures = (item) => {
+  const filtrationByFeatures = (element) => {
     const checkedFeaturesItems = Array.from(featuresFieldset.querySelectorAll(`input:checked`));
-    return checkedFeaturesItems.every((element) => {
-      return item.offer.features.includes(element.value);
+    return checkedFeaturesItems.every((item) => {
+      return element.offer.features.includes(item.value);
     });
   };
 
-  const filterElement = (items) => {
-    const data = items;
-    window.pin.remove();
-    window.pin.deletePopups();
+  const filterElements = window.util.debounce((elements) => {
+    const data = elements;
+    window.pin.removeElements();
 
     const filteredData = data.filter(filtrationByType).filter(filtrationByPrice).filter(filtrationByRooms).filter(filtrationByGuests).filter(filtrationByFeatures);
 
-    window.pin.update(filteredData);
-    window.pin.renderCard(filteredData);
-  };
+    window.pin.renderElements(filteredData);
+    window.pin.open();
+  });
 
-  const activateFilter = (items) => {
+  const activateFilter = (elements) => {
     filterForm.addEventListener(`change`, () => {
-      filterElement(items);
+      filterElements(elements);
     });
   };
 

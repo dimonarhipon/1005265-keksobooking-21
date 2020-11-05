@@ -7,9 +7,10 @@
   const LIMIT_RIGHT = 1168;
 
   const PINS_LIMIT = 5;
+  const isLoad = false;
+  const isActivatePage = false;
   const fragmentAdvert = document.createDocumentFragment();
   const fragmentCard = document.createDocumentFragment();
-  let isPageActivated = false;
   const pinContainer = window.map.workSpace.querySelector(`.map__pins`);
   const pinMain = window.map.workSpace.querySelector(`.map__pin--main`);
   const pinMainWidth = Math.floor(pinMain.offsetWidth / 2);
@@ -24,29 +25,24 @@
     window.form.address.value = `${x}, ${y}`;
   };
 
-  const updatePin = (adverts) => {
-    const count = adverts.length > PINS_LIMIT ? PINS_LIMIT : adverts.length;
+
+  const renderElements = (elements) => {
+    const count = elements.length > PINS_LIMIT ? PINS_LIMIT : elements.length;
+
     for (let i = 0; i < count; i++) {
-      fragmentAdvert.appendChild(window.advert.render(adverts[i]));
+      fragmentAdvert.appendChild(window.advert.render(elements[i]));
+      fragmentCard.appendChild(window.card.render(elements[i]));
     }
     window.pin.container.appendChild(fragmentAdvert);
-    openPopup();
-  };
-  const updateCard = (cards) => {
-    const count = cards.length > PINS_LIMIT ? PINS_LIMIT : cards.length;
-    for (let i = 0; i < count; i++) {
-      fragmentCard.appendChild(window.card.render(cards[i]));
-    }
     window.pin.container.appendChild(fragmentCard);
+    addPinsListener();
   };
 
-
-  const removePins = () => {
-    const mapPins = Array.from(pinContainer.querySelectorAll(`.map__pin:not(.map__pin--main)`));
-    mapPins.forEach((item) => item.remove());
-  };
-  const removePopups = () => {
+  const removeElements = () => {
+    const mapPins = pinContainer.querySelectorAll(`.map__pin:not(.map__pin--main)`);
     const popups = window.map.workSpace.querySelectorAll(`.map__card`);
+
+    mapPins.forEach((item) => item.remove());
     popups.forEach((item) => item.remove());
   };
 
@@ -65,7 +61,7 @@
     });
     closePopup.addEventListener(`click`, () => popups[i].classList.add(`hidden`));
   };
-  const openPopup = () => {
+  const addPinsListener = () => {
     const mapPins = Array.from(pinContainer.querySelectorAll(`.map__pin:not(.map__pin--main)`));
     for (let i = 0; i < mapPins.length; i++) {
       mapPins[i].addEventListener(`click`, () => {
@@ -73,38 +69,24 @@
       });
     }
   };
-
-  const pinSuccessHandler = (advert) => {
-    window.mapFilter.activate(advert);
-    updatePin(advert);
+  const openPins = () => {
+    const mapPins = pinContainer.querySelectorAll(`.map__pin:not(.map__pin--main)`);
+    mapPins.forEach((item) => item.classList.remove(`hidden`));
   };
 
-  const popupSuccessHandler = (card) => {
-    window.mapFilter.activate(card);
-    updateCard(card);
+  const successHandler = (elements) => {
+    window.mapFilter.activate(elements);
+    renderElements(elements);
   };
 
-  const getPins = () => {
-    return window.backend.load(pinSuccessHandler, window.util.errorHandler);
-  };
-  const getCards = () => {
-    return window.backend.load(popupSuccessHandler, window.util.errorHandler);
-  };
-
-  const activatePage = () => {
-    if (!isPageActivated) {
-      isPageActivated = true;
-    }
-    getPins();
-    getCards();
-  };
 
   pinMain.addEventListener(`mousedown`, (evt) => {
     evt.preventDefault();
 
     if (evt.button === 0) {
-      window.map.disablePage(false);
+      window.map.disablePage(isActivatePage, isLoad);
 
+      openPins();
       setCoordinate(pinMainOx, pinMainOy + pinMainHeight);
       let dragged = false;
       let startCoords = {
@@ -148,7 +130,6 @@
 
       const onMouseUp = (upEvt) => {
         upEvt.preventDefault();
-        activatePage();
         setCoordinate(leftPin + pinMainWidth, topPin + pinMainHeight);
 
         document.removeEventListener(`mousemove`, onMouseMove);
@@ -170,9 +151,9 @@
 
   pinMain.addEventListener(`keydown`, (evt) => {
     if (evt.key === `Enter`) {
-      window.map.disablePage(false);
+      window.map.disablePage(isActivatePage, isLoad);
+      openPins();
       setCoordinate(pinMainOx, pinMainOy + pinMainHeight);
-      activatePage();
     }
   });
 
@@ -181,10 +162,9 @@
 
   window.pin = {
     container: pinContainer,
-    isPageActivated,
-    remove: removePins,
-    deletePopups: removePopups,
-    update: updatePin,
-    renderCard: updateCard,
+    successHandler,
+    removeElements,
+    renderElements,
+    open: openPins
   };
 })();

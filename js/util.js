@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  const DEBOUNCE_INTERVAL = 500;
   const successTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
   const errorTemplate = document.querySelector(`#error`).content.querySelector(`.error`);
   const errorButton = errorTemplate.querySelector(`.error__button`);
@@ -54,8 +55,16 @@
         errorElement.style.display = `none`;
       });
     },
-    debounce: (items) => {
-      setTimeout(items, 500);
-    }
+    debounce: (callback) => {
+      let lastTimeout = null;
+      return (...parameters) => {
+        if (lastTimeout) {
+          window.clearTimeout(lastTimeout);
+        }
+        lastTimeout = window.setTimeout(() => {
+          callback(...parameters);
+        }, DEBOUNCE_INTERVAL);
+      };
+    },
   };
 })();
