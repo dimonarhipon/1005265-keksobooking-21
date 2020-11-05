@@ -12,6 +12,8 @@
       img.src = advert.author.avatar;
       img.alt = advert.offer.title;
 
+      pinElement.classList.add(`hidden`);
+
       return pinElement;
     },
   };

@@ -1,12 +1,9 @@
-"use strict";
+'use strict';
 
 (function () {
-  const successTemplate = document
-    .querySelector(`#success`)
-    .content.querySelector(`.success`);
-  const errorTemplate = document
-    .querySelector(`#error`)
-    .content.querySelector(`.error`);
+  const DEBOUNCE_INTERVAL = 500;
+  const successTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
+  const errorTemplate = document.querySelector(`#error`).content.querySelector(`.error`);
   const errorButton = errorTemplate.querySelector(`.error__button`);
 
   window.util = {
@@ -57,6 +54,17 @@
       errorButton.addEventListener(`click`, () => {
         errorElement.style.display = `none`;
       });
+    },
+    debounce: (callback) => {
+      let lastTimeout = null;
+      return (...parameters) => {
+        if (lastTimeout) {
+          window.clearTimeout(lastTimeout);
+        }
+        lastTimeout = window.setTimeout(() => {
+          callback(...parameters);
+        }, DEBOUNCE_INTERVAL);
+      };
     },
   };
 })();
