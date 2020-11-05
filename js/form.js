@@ -16,17 +16,51 @@
   const capacitySelect = form.querySelector(`#capacity`);
   const address = form.querySelector(`#address`);
   const resetButton = form.querySelector(`.ad-form__reset`);
-  const titleInput = form.querySelector(`#title`);
+  const title = form.querySelector(`#title`);
   const typeHouse = form.querySelector(`#type`);
-  const priceInput = form.querySelector(`#price`);
+  const price = form.querySelector(`#price`);
   const timeInSelect = form.querySelector(`#timein`);
   const timeOutSelect = form.querySelector(`#timeout`);
 
 
-  const validate = () => {
+  const onTitleEventInput = () => {
+    const titleLenght = title.value.length;
 
+    if (title.validity.tooShort) {
+      title.setCustomValidity(`Нужно больше 30 символов. Сейчас: ${titleLenght}`);
+    } else if (title.validity.tooLong) {
+      title.setCustomValidity(`Нужно меньше 100 символов. Сейчас: ${titleLenght}`);
+    } else if (title.validity.valueMissing) {
+      title.setCustomValidity(`Нужно написать заголовок`);
+    } else {
+      title.setCustomValidity(``);
+    }
+  };
+
+  const onTypeHouseChange = () => {
+    const minPrice = BuildingMinPrice[typeHouse.value.toUpperCase()];
+    price.min = minPrice;
+    price.placeholder = minPrice.toString();
+  };
+
+  const onPriseInvalid = () => {
+    if (price.validity.valueMissing) {
+      price.setCustomValidity(`Нужно установить цену`);
+    } else if (price.validity.typeMismatch) {
+      price.setCustomValidity(`Вводите число`);
+    } else if (price.validity.rangeUnderFlow) {
+      price.setCustomValidity(`Слишком мало, надо больше`);
+    } else if (price.validity.rangeOverflow) {
+      price.setCustomValidity(`Слишком много, надо меньше 1000001`);
+    } else {
+      price.setCustomValidity(``);
+    }
+  };
+
+  const onRoomAndCapacitySelectChange = () => {
     const roomCount = parseInt(roomSelect.value, 10);
     const capacityCount = parseInt(capacitySelect.value, 10);
+
     if (roomCount === MAX_ROOMS && capacityCount !== MIN_CAPACITY) {
       capacitySelect.setCustomValidity(`Такой выбор соотвествует только варианту: не для гостей`);
       return;
@@ -40,62 +74,23 @@
       return;
     }
     capacitySelect.setCustomValidity(``);
+    roomSelect.reportValidity();
+    capacitySelect.reportValidity();
   };
 
-  titleInput.addEventListener(`input`, () => {
-    const titleLenght = titleInput.value.length;
-
-    if (titleInput.validity.tooShort) {
-      titleInput.setCustomValidity(`Нужно больше 30 символов. Сейчас: ${titleLenght}`);
-    } else if (titleInput.validity.tooLong) {
-      titleInput.setCustomValidity(`Нужно меньше 100 символов. Сейчас: ${titleLenght}`);
-    } else if (titleInput.validity.valueMissing) {
-      titleInput.setCustomValidity(`Нужно написать заголовок`);
-    } else {
-      titleInput.setCustomValidity(``);
-    }
-  });
-  typeHouse.addEventListener(`change`, () => {
-    const minPrice = BuildingMinPrice[typeHouse.value.toUpperCase()];
-    priceInput.min = minPrice;
-    priceInput.placeholder = minPrice.toString();
-    typeHouse.reportValidity();
-  });
-  priceInput.addEventListener(`invalid`, () => {
-
-    if (priceInput.validity.valueMissing) {
-      priceInput.setCustomValidity(`Нужно установить цену`);
-    } else if (priceInput.validity.typeMismatch) {
-      priceInput.setCustomValidity(`Вводите число`);
-    } else if (priceInput.validity.rangeOverflow) {
-      priceInput.setCustomValidity(`Слишком много, надо меньше 1000001`);
-    } else {
-      priceInput.setCustomValidity(``);
-    }
-  });
-  roomSelect.addEventListener(`change`, () => {
-    validate();
-    roomSelect.reportValidity();
-  });
-  capacitySelect.addEventListener(`change`, () => {
-    validate();
-    capacitySelect.reportValidity();
-  });
-
-
-  timeInSelect.addEventListener(`change`, (evt) => {
+  const onTimeInSelect = (evt) => {
     timeOutSelect.value = evt.target.value;
-  });
-  timeOutSelect.addEventListener(`change`, (evt) => {
+  };
+  const onTimeOutSelect = (evt) => {
     timeInSelect.value = evt.target.value;
-  });
+  };
+
 
   const successSubmitHandler = () => {
     window.util.openSuccessPopup();
     window.pin.removeElements();
     form.reset();
     window.map.disablePage();
-    // window.pin.isLoad = true;
   };
 
   const resetHandler = (evt) => {
@@ -103,14 +98,33 @@
     form.reset();
   };
   const submitHandler = (evt) => {
-    window.backend.post(new FormData(form), successSubmitHandler, window.util.openErrorPopup);
     evt.preventDefault();
+    window.backend.post(new FormData(form), successSubmitHandler, window.util.openErrorPopup);
+
+    title.removeEventListener(`input`, onTitleEventInput);
+    typeHouse.removeEventListener(`change`, onTypeHouseChange);
+    price.removeEventListener(`invalid`, onPriseInvalid);
+    roomSelect.removeEventListener(`change`, onRoomAndCapacitySelectChange);
+    capacitySelect.removeEventListener(`change`, onRoomAndCapacitySelectChange);
+    timeInSelect.removeEventListener(`change`, onTimeInSelect);
+    timeOutSelect.removeEventListener(`change`, onTimeOutSelect);
+
+    resetButton.removeEventListener(`reset`, resetHandler);
+    form.removeEventListener(`submit`, submitHandler);
   };
 
-
-  validate();
+  title.addEventListener(`input`, onTitleEventInput);
+  typeHouse.addEventListener(`change`, onTypeHouseChange);
+  price.addEventListener(`invalid`, onPriseInvalid);
+  roomSelect.addEventListener(`change`, onRoomAndCapacitySelectChange);
+  capacitySelect.addEventListener(`change`, onRoomAndCapacitySelectChange);
+  timeInSelect.addEventListener(`change`, onTimeInSelect);
+  timeOutSelect.addEventListener(`change`, onTimeOutSelect);
   resetButton.addEventListener(`reset`, resetHandler);
   form.addEventListener(`submit`, submitHandler);
+
+  onRoomAndCapacitySelectChange();
+  onTypeHouseChange();
 
   window.form = {
     container: form,

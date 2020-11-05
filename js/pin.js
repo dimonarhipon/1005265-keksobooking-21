@@ -22,6 +22,7 @@
   const setCoordinate = (x = pinMainOx, y = pinMainOy) => {
     x = parseInt(x, 10);
     y = parseInt(y, 10);
+    console.log(x, y);
     window.form.address.value = `${x}, ${y}`;
   };
 
@@ -93,8 +94,8 @@
         x: evt.clientX,
         y: evt.clientY
       };
-      let topPin;
-      let leftPin;
+      let topPin = pinMainOy;
+      let leftPin = pinMainOx;
 
       const onMouseMove = (moveEvt) => {
         moveEvt.preventDefault();
@@ -125,12 +126,12 @@
         }
         pinMain.style.top = topPin + `px`;
         pinMain.style.left = leftPin + `px`;
-        setCoordinate(leftPin + pinMainWidth, topPin + pinMainHeight);
+        setCoordinate(leftPin + pinMainWidth, topPin + 2 * pinMainHeight);
       };
 
       const onMouseUp = (upEvt) => {
         upEvt.preventDefault();
-        setCoordinate(leftPin + pinMainWidth, topPin + pinMainHeight);
+        setCoordinate(leftPin + pinMainWidth, topPin + 2 * pinMainHeight);
 
         document.removeEventListener(`mousemove`, onMouseMove);
         document.removeEventListener(`mouseup`, onMouseUp);
