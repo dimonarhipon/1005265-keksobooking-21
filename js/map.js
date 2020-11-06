@@ -9,7 +9,7 @@
     }
   };
 
-  const disablePage = (state = true, isRequest = true) => {
+  const disablePage = (state = true, isRequest = false) => {
     map.classList.add(`map--faded`);
     window.form.container.classList.add(`ad-form--disabled`);
 

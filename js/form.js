@@ -23,7 +23,7 @@
   const timeOutSelect = form.querySelector(`#timeout`);
 
 
-  const onTitleEventInput = () => {
+  const onTitleInput = () => {
     const titleLenght = title.value.length;
 
     if (title.validity.tooShort) {
@@ -91,6 +91,7 @@
     window.pin.removeElements();
     form.reset();
     window.map.disablePage();
+    window.isLoad = true;
   };
 
   const resetHandler = (evt) => {
@@ -101,7 +102,7 @@
     evt.preventDefault();
     window.backend.post(new FormData(form), successSubmitHandler, window.util.openErrorPopup);
 
-    title.removeEventListener(`input`, onTitleEventInput);
+    title.removeEventListener(`input`, onTitleInput);
     typeHouse.removeEventListener(`change`, onTypeHouseChange);
     price.removeEventListener(`invalid`, onPriseInvalid);
     roomSelect.removeEventListener(`change`, onRoomAndCapacitySelectChange);
@@ -113,7 +114,7 @@
     form.removeEventListener(`submit`, submitHandler);
   };
 
-  title.addEventListener(`input`, onTitleEventInput);
+  title.addEventListener(`input`, onTitleInput);
   typeHouse.addEventListener(`change`, onTypeHouseChange);
   price.addEventListener(`invalid`, onPriseInvalid);
   roomSelect.addEventListener(`change`, onRoomAndCapacitySelectChange);

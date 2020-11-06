@@ -2,6 +2,8 @@
 
 
 (function () {
+  const PHOTO_WIDTH = 40;
+  const PHOTO_HEIGHT = 40;
   const TypeHouse = {
     flat: `Квартира`,
     bungalow: `Бунгало`,
@@ -40,8 +42,8 @@
         for (let i = 0; i < item.offer.photos.length; i++) {
           const newElementList = document.createElement(`img`);
           newElementList.src = item.offer.photos[i];
-          newElementList.width = 40;
-          newElementList.height = 40;
+          newElementList.width = PHOTO_WIDTH;
+          newElementList.height = PHOTO_HEIGHT;
           listFragment.appendChild(newElementList);
         }
         photos.appendChild(listFragment);

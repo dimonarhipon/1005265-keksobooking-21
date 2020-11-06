@@ -1,7 +1,16 @@
 'use strict';
 
 (function () {
+  const ANY_NUMBER = `any`;
+  const TYPE = `type`;
+  const ROOMS_NUMBER = `rooms`;
+  const GUESTS_NUMBER = `guests`;
+
   const PriceRange = {
+    ANY: {
+      min: 0,
+      max: Infinity,
+    },
     LOW: {
       min: 0,
       max: 10000
@@ -23,10 +32,10 @@
   const featuresFieldset = filterForm.querySelector(`#housing-features`);
 
   const filterItem = (item, element, key) => {
-    return item.value === `any` ? true : item.value === element[key].toString();
+    return item.value === ANY_NUMBER ? true : item.value === element[key].toString();
   };
   const filtrationByType = (element) => {
-    return filterItem(typeSelect, element.offer, `type`);
+    return filterItem(typeSelect, element.offer, TYPE);
   };
   const filtrationByPrice = (element) => {
     const filterPrice = PriceRange[priceSelect.value.toUpperCase()];
@@ -34,10 +43,10 @@
     return filterPrice ? element.offer.price >= filterPrice.min && element.offer.price <= filterPrice.max : true;
   };
   const filtrationByRooms = (element) => {
-    return filterItem(roomsSelect, element.offer, `rooms`);
+    return filterItem(roomsSelect, element.offer, ROOMS_NUMBER);
   };
   const filtrationByGuests = (element) => {
-    return filterItem(guestsSelect, element.offer, `guests`);
+    return filterItem(guestsSelect, element.offer, GUESTS_NUMBER);
   };
   const filtrationByFeatures = (element) => {
     const checkedFeaturesItems = Array.from(featuresFieldset.querySelectorAll(`input:checked`));
@@ -51,6 +60,36 @@
     window.pin.removeElements();
 
     const filteredData = data.filter(filtrationByType).filter(filtrationByPrice).filter(filtrationByRooms).filter(filtrationByGuests).filter(filtrationByFeatures);
+
+    // const filteredData = [];
+
+
+    // for (let i = 0; i < data.length; i++) {
+    //   let element = data[i];
+    //   const filterPrice = PriceRange[priceSelect.value.toUpperCase()];
+    //   const checkedFeaturesItems = Array.from(featuresFieldset.querySelectorAll(`input:checked`));
+
+    //   if (filterItem(typeSelect, element.offer, TYPE)) {
+    //     filteredData.push(element);
+    //   }
+
+    //   if (element.offer.price >= filterPrice.min && element.offer.price <= filterPrice.max) {
+    //     filteredData.push(element);
+    //   }
+
+    //   if (filterItem(roomsSelect, element.offer, ROOMS_NUMBER)) {
+    //     filteredData.push(element);
+    //   }
+    //   if (filterItem(guestsSelect, element.offer, GUESTS_NUMBER)) {
+    //     filteredData.push(element);
+    //   }
+
+    //   if (checkedFeaturesItems.every((item) => {
+    //     return element.offer.features.includes(item.value);
+    //   })) {
+    //     filteredData.push(element);
+    //   }
+    // }
 
     window.pin.renderElements(filteredData);
     window.pin.open();

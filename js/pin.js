@@ -7,7 +7,6 @@
   const LIMIT_RIGHT = 1168;
 
   const PINS_LIMIT = 5;
-  const isLoad = false;
   const isActivatePage = false;
   const fragmentAdvert = document.createDocumentFragment();
   const fragmentCard = document.createDocumentFragment();
@@ -77,16 +76,23 @@
   const successHandler = (elements) => {
     window.mapFilter.activate(elements);
     renderElements(elements);
+    openPins();
   };
-
+  // Наверняка можно подругому, но у меня не получалось
+  // переопределение через window.pin.isload не сработало
+  // в form.js на 94 строке идёт переопределение
+  window.isLoad = true;
 
   pinMain.addEventListener(`mousedown`, (evt) => {
     evt.preventDefault();
 
     if (evt.button === 0) {
-      window.map.disablePage(isActivatePage, isLoad);
+      window.map.disablePage(isActivatePage, window.isLoad);
 
-      openPins();
+      if (window.isLoad) {
+        window.isLoad = false;
+      }
+
       setCoordinate(pinMainOx, pinMainOy + pinMainHeight);
       let dragged = false;
       let startCoords = {
@@ -151,7 +157,7 @@
 
   pinMain.addEventListener(`keydown`, (evt) => {
     if (evt.key === `Enter`) {
-      window.map.disablePage(isActivatePage, isLoad);
+      window.map.disablePage(isActivatePage, window.pin.isLoad);
       openPins();
       setCoordinate(pinMainOx, pinMainOy + pinMainHeight);
     }

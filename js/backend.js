@@ -6,12 +6,10 @@
   const TIMEOUT = 7000;
   const statusCode = {
     OK: 200,
-    // ERROR_REQUEST: 400,
-    // NOT_FOUND: 404,
-    // EROR_SERVER: 500,
+    ERROR_REQUEST: 400,
+    NOT_FOUND: 404,
+    EROR_SERVER: 500,
   };
-
-  // После успешной передачи данных на сервер верните страницу в неактивное состояние и сбросьте форму.
 
   window.backend = {
     load: (onLoad, onError) => {
