@@ -1,7 +1,6 @@
 'use strict';
 
-(function () {
 
-  window.map.disablePage();
-})();
+window.map.disablePage();
+
 
