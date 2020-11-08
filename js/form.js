@@ -132,12 +132,12 @@ resetButton.addEventListener(`reset`, resetHandler);
 resetButton.addEventListener(`click`, resetHandler);
 form.addEventListener(`submit`, submitHandler);
 
-onRoomAndCapacitySelectChange();
-onTypeHouseChange();
 
 window.form = {
   container: form,
   address,
   fieldsets: Array.from(form.querySelectorAll(`fieldset`)),
+  onRoomAndCapacitySelectChange,
+  onTypeHouseChange,
 };
 
