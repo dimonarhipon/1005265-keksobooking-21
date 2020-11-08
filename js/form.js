@@ -1,5 +1,6 @@
 'use strict';
 
+const URL_IMAGE_DEFAULT = `img/muffin-grey.svg`;
 const MAX_ROOMS = 100;
 const MIN_CAPACITY = 0;
 
@@ -85,33 +86,39 @@ const onTimeOutSelect = (evt) => {
 };
 
 
+const setСurrentCoordinatesMarker = (height = window.pin.markerHeight) => {
+  const x = window.pin.marker.offsetLeft + window.pin.markerWidth;
+  const y = window.pin.marker.offsetTop + height;
+  window.pin.setCoordinate(x, y);
+};
+
 const successSubmitHandler = () => {
   window.util.openSuccessPopup();
   window.pin.removeElements();
   window.mapFilter.form.reset();
   form.reset();
   window.map.disablePage();
+  setСurrentCoordinatesMarker();
   window.isLoad = true;
 };
 
 const resetHandler = (evt) => {
   evt.preventDefault();
   form.reset();
+  setСurrentCoordinatesMarker(2 * window.pin.markerHeight);
+
+  window.loadImage.previewAvatar.src = URL_IMAGE_DEFAULT;
+  window.loadImage.previewPhoto.querySelector(`img`).src = ``;
 };
 const submitHandler = (evt) => {
   evt.preventDefault();
   window.backend.post(new FormData(form), successSubmitHandler, window.util.openErrorPopup);
 
-  title.removeEventListener(`input`, onTitleInput);
-  typeHouse.removeEventListener(`change`, onTypeHouseChange);
-  price.removeEventListener(`invalid`, onPriseInvalid);
-  roomSelect.removeEventListener(`change`, onRoomAndCapacitySelectChange);
-  capacitySelect.removeEventListener(`change`, onRoomAndCapacitySelectChange);
-  timeInSelect.removeEventListener(`change`, onTimeInSelect);
-  timeOutSelect.removeEventListener(`change`, onTimeOutSelect);
+  window.pin.marker.style.top = `${window.pin.markerStartTop - window.pin.markerHeight}px`;
+  window.pin.marker.style.left = `${window.pin.markerStartLeft - window.pin.markerWidth}px`;
 
-  resetButton.removeEventListener(`reset`, resetHandler);
-  form.removeEventListener(`submit`, submitHandler);
+  window.loadImage.previewAvatar.src = `img/muffin-grey.svg`;
+  window.loadImage.previewPhoto.querySelector(`img`).src = ``;
 };
 
 title.addEventListener(`input`, onTitleInput);
@@ -122,6 +129,7 @@ capacitySelect.addEventListener(`change`, onRoomAndCapacitySelectChange);
 timeInSelect.addEventListener(`change`, onTimeInSelect);
 timeOutSelect.addEventListener(`change`, onTimeOutSelect);
 resetButton.addEventListener(`reset`, resetHandler);
+resetButton.addEventListener(`click`, resetHandler);
 form.addEventListener(`submit`, submitHandler);
 
 onRoomAndCapacitySelectChange();
