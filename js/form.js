@@ -24,12 +24,12 @@ const timeOutSelect = form.querySelector(`#timeout`);
 
 
 const onTitleInput = () => {
-  const titleLenght = title.value.length;
+  const titleLength = title.value.length;
 
   if (title.validity.tooShort) {
-    title.setCustomValidity(`Нужно больше 30 символов. Сейчас: ${titleLenght}`);
+    title.setCustomValidity(`Нужно больше 30 символов. Сейчас: ${titleLength}`);
   } else if (title.validity.tooLong) {
-    title.setCustomValidity(`Нужно меньше 100 символов. Сейчас: ${titleLenght}`);
+    title.setCustomValidity(`Нужно меньше 100 символов. Сейчас: ${titleLength}`);
   } else if (title.validity.valueMissing) {
     title.setCustomValidity(`Нужно написать заголовок`);
   } else {
@@ -108,7 +108,7 @@ const resetHandler = (evt) => {
   setСurrentCoordinatesMarker(2 * window.pin.markerHeight);
 
   window.loadImage.previewAvatar.src = URL_IMAGE_DEFAULT;
-  window.loadImage.previewPhoto.querySelector(`img`).src = ``;
+  window.loadImage.previewPhoto.querySelector(`img`).remove();
 };
 const submitHandler = (evt) => {
   evt.preventDefault();
@@ -117,8 +117,8 @@ const submitHandler = (evt) => {
   window.pin.marker.style.top = `${window.pin.markerStartTop - window.pin.markerHeight}px`;
   window.pin.marker.style.left = `${window.pin.markerStartLeft - window.pin.markerWidth}px`;
 
-  window.loadImage.previewAvatar.src = `img/muffin-grey.svg`;
-  window.loadImage.previewPhoto.querySelector(`img`).src = ``;
+  window.loadImage.previewAvatar.src = URL_IMAGE_DEFAULT;
+  window.loadImage.previewPhoto.querySelector(`img`).remove();
 };
 
 title.addEventListener(`input`, onTitleInput);
