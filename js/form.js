@@ -1,5 +1,6 @@
 'use strict';
 
+const URL_IMAGE_DEFAULT = `img/muffin-grey.svg`;
 const MAX_ROOMS = 100;
 const MIN_CAPACITY = 0;
 
@@ -23,12 +24,12 @@ const timeOutSelect = form.querySelector(`#timeout`);
 
 
 const onTitleInput = () => {
-  const titleLenght = title.value.length;
+  const titleLength = title.value.length;
 
   if (title.validity.tooShort) {
-    title.setCustomValidity(`Нужно больше 30 символов. Сейчас: ${titleLenght}`);
+    title.setCustomValidity(`Нужно больше 30 символов. Сейчас: ${titleLength}`);
   } else if (title.validity.tooLong) {
-    title.setCustomValidity(`Нужно меньше 100 символов. Сейчас: ${titleLenght}`);
+    title.setCustomValidity(`Нужно меньше 100 символов. Сейчас: ${titleLength}`);
   } else if (title.validity.valueMissing) {
     title.setCustomValidity(`Нужно написать заголовок`);
   } else {
@@ -85,33 +86,39 @@ const onTimeOutSelect = (evt) => {
 };
 
 
+const setСurrentCoordinatesMarker = (height = window.pin.markerHeight) => {
+  const x = window.pin.marker.offsetLeft + window.pin.markerWidth;
+  const y = window.pin.marker.offsetTop + height;
+  window.pin.setCoordinate(x, y);
+};
+
 const successSubmitHandler = () => {
   window.util.openSuccessPopup();
   window.pin.removeElements();
   window.mapFilter.form.reset();
   form.reset();
   window.map.disablePage();
+  setСurrentCoordinatesMarker();
   window.isLoad = true;
 };
 
 const resetHandler = (evt) => {
   evt.preventDefault();
   form.reset();
+  setСurrentCoordinatesMarker(2 * window.pin.markerHeight);
+
+  window.loadImage.previewAvatar.src = URL_IMAGE_DEFAULT;
+  window.loadImage.previewPhoto.querySelector(`img`).remove();
 };
 const submitHandler = (evt) => {
   evt.preventDefault();
   window.backend.post(new FormData(form), successSubmitHandler, window.util.openErrorPopup);
 
-  title.removeEventListener(`input`, onTitleInput);
-  typeHouse.removeEventListener(`change`, onTypeHouseChange);
-  price.removeEventListener(`invalid`, onPriseInvalid);
-  roomSelect.removeEventListener(`change`, onRoomAndCapacitySelectChange);
-  capacitySelect.removeEventListener(`change`, onRoomAndCapacitySelectChange);
-  timeInSelect.removeEventListener(`change`, onTimeInSelect);
-  timeOutSelect.removeEventListener(`change`, onTimeOutSelect);
+  window.pin.marker.style.top = `${window.pin.markerStartTop - window.pin.markerHeight}px`;
+  window.pin.marker.style.left = `${window.pin.markerStartLeft - window.pin.markerWidth}px`;
 
-  resetButton.removeEventListener(`reset`, resetHandler);
-  form.removeEventListener(`submit`, submitHandler);
+  window.loadImage.previewAvatar.src = URL_IMAGE_DEFAULT;
+  window.loadImage.previewPhoto.querySelector(`img`).remove();
 };
 
 title.addEventListener(`input`, onTitleInput);
@@ -122,14 +129,15 @@ capacitySelect.addEventListener(`change`, onRoomAndCapacitySelectChange);
 timeInSelect.addEventListener(`change`, onTimeInSelect);
 timeOutSelect.addEventListener(`change`, onTimeOutSelect);
 resetButton.addEventListener(`reset`, resetHandler);
+resetButton.addEventListener(`click`, resetHandler);
 form.addEventListener(`submit`, submitHandler);
 
-onRoomAndCapacitySelectChange();
-onTypeHouseChange();
 
 window.form = {
   container: form,
   address,
   fieldsets: Array.from(form.querySelectorAll(`fieldset`)),
+  onRoomAndCapacitySelectChange,
+  onTypeHouseChange,
 };
 

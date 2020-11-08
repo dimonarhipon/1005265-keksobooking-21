@@ -5,7 +5,6 @@ const LIMIT_BOTTOM = 620;
 const LIMIT_LEFT = -32;
 const LIMIT_RIGHT = 1168;
 
-const PINS_LIMIT = 5;
 const isActivatePage = false;
 const fragmentAdvert = document.createDocumentFragment();
 const fragmentCard = document.createDocumentFragment();
@@ -25,7 +24,7 @@ const setCoordinate = (x = pinMainOx, y = pinMainOy) => {
 
 
 const renderElements = (elements) => {
-  const count = elements.length > PINS_LIMIT ? PINS_LIMIT : elements.length;
+  const count = elements.length > window.mapFilter.PINS_LIMIT ? window.mapFilter.PINS_LIMIT : elements.length;
 
   for (let i = 0; i < count; i++) {
     fragmentAdvert.appendChild(window.advert.render(elements[i]));
@@ -165,6 +164,12 @@ setCoordinate();
 
 window.pin = {
   container: pinContainer,
+  setCoordinate,
+  marker: pinMain,
+  markerWidth: pinMainWidth,
+  markerHeight: pinMainHeight,
+  markerStartTop: pinMainOy,
+  markerStartLeft: pinMainOx,
   successHandler,
   removeElements,
   renderElements,

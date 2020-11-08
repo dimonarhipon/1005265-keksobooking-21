@@ -16,6 +16,8 @@ const disablePage = (state = true, isRequest = false) => {
   window.form.fieldsets.map((item) => (item.disabled = state));
   window.mapFilter.fieldsets.map((item) => (item.disabled = state));
   window.mapFilter.selects.map((item) => (item.disabled = state));
+  window.form.onRoomAndCapacitySelectChange();
+  window.form.onTypeHouseChange();
   sendGetRequest(isRequest);
 
   if (!state) {

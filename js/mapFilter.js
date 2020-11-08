@@ -72,6 +72,7 @@ const activateFilter = (elements) => {
 };
 
 window.mapFilter = {
+  PINS_LIMIT,
   form: filterForm,
   fieldsets: Array.from(filterForm.querySelectorAll(`fieldset`)),
   selects: Array.from(filterForm.querySelectorAll(`select`)),

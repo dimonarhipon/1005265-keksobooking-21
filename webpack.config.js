@@ -12,6 +12,7 @@ module.exports = {
     `./js/mapFilter.js`,
     `./js/form.js`,
     `./js/pin.js`,
+    `./js/loadImage.js`,
     `./js/main.js`
   ],
   output: {
