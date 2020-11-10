@@ -9,7 +9,7 @@ window.util = {
   getRandomNumber: (max, min = 0) => {
     return Math.floor(Math.random() * (max - min) + min);
   },
-  errorHandler: (errorMessage) => {
+  onLoadError: (errorMessage) => {
     const node = document.createElement(`div`);
     node.style = `z-index: 5; margin: 0 auto; text-align: center; background-color: tomato;`;
     node.style.position = `absolute`;
@@ -23,7 +23,7 @@ window.util = {
     node.textContent = errorMessage;
     document.body.insertAdjacentElement(`afterbegin`, node);
   },
-  openSuccessPopup: () => {
+  openPopupSuccess: () => {
     const successElement = successTemplate.cloneNode(true);
     document.body.insertAdjacentElement(`afterbegin`, successElement);
 
@@ -37,7 +37,7 @@ window.util = {
       }
     });
   },
-  openErrorPopup: () => {
+  onPostError: () => {
     const errorElement = errorTemplate.cloneNode(true);
     document.body.insertAdjacentElement(`afterbegin`, errorElement);
 

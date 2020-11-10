@@ -4,7 +4,7 @@
 const URL_GET = `https://21.javascript.pages.academy/keksobooking/data`;
 const URL_POST = `https://21.javascript.pages.academy/keksobooking`;
 const TIMEOUT = 7000;
-const statusCode = {
+const StatusCode = {
   OK: 200,
   ERROR_REQUEST: 400,
   NOT_FOUND: 404,
@@ -28,23 +28,23 @@ const request = (onLoad, onError) => {
   xhr.responseType = `json`;
 
   xhr.addEventListener(`load`, function () {
-    if (statusCode.ERROR_REQUEST === xhr.status) {
+    if (StatusCode.ERROR_REQUEST === xhr.status) {
       onError(`Неверный запрос: ${xhr.status} ${xhr.statusText}`);
-    } else if (statusCode.NOT_FOUND === xhr.status) {
+    } else if (StatusCode.NOT_FOUND === xhr.status) {
       onError(`Не найдено: ${xhr.status} ${xhr.statusText}`);
-    } else if (statusCode.EROR_SERVER === xhr.status) {
+    } else if (StatusCode.EROR_SERVER === xhr.status) {
       onError(`Ошибка сервера: ${xhr.status} ${xhr.statusText}`);
-    } else if (statusCode.OK !== xhr.status) {
+    } else if (StatusCode.OK !== xhr.status) {
       onError(`Статус ответа: ${xhr.status} ${xhr.statusText}`);
     } else {
       onLoad(xhr.response);
     }
   });
 
-  xhr.addEventListener(`error`, function () {
+  xhr.addEventListener(`error`, () => {
     onError(`Произошла ошибка соединения`);
   });
-  xhr.addEventListener(`timeout`, function () {
+  xhr.addEventListener(`timeout`, () => {
     onError(`Запрос не успел выполниться за ${xhr.timeout} мс`);
   });
 

@@ -17,8 +17,6 @@ const pinMainOy = pinMain.offsetTop + pinMainHeight;
 
 
 const setCoordinate = (x = pinMainOx, y = pinMainOy) => {
-  x = parseInt(x, 10);
-  y = parseInt(y, 10);
   window.form.address.value = `${x}, ${y}`;
 };
 
@@ -71,7 +69,7 @@ const openPins = () => {
   mapPins.forEach((item) => item.classList.remove(`hidden`));
 };
 
-const successHandler = (elements) => {
+const onLoadSuccess = (elements) => {
   window.mapFilter.activate(elements);
   renderElements(elements);
   openPins();
@@ -170,7 +168,7 @@ window.pin = {
   markerHeight: pinMainHeight,
   markerStartTop: pinMainOy,
   markerStartLeft: pinMainOx,
-  successHandler,
+  onLoadSuccess,
   removeElements,
   renderElements,
   open: openPins
