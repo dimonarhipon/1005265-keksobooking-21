@@ -1,7 +1,7 @@
 'use strict';
 
 const FILE_TYPES = [`gif`, `jpg`, `jpeg`, `png`, `svg`, `webp`];
-const photoStyles = {
+const PhotoStyles = {
   width: 70,
   height: 70
 };
@@ -46,8 +46,8 @@ photoHousing.addEventListener(`change`, () => {
 
       if (previewImage === null) {
         const photoElement = document.createElement(`img`);
-        photoElement.width = photoStyles.width;
-        photoElement.height = photoStyles.height;
+        photoElement.width = PhotoStyles.width;
+        photoElement.height = PhotoStyles.height;
         photoElement.style.objectFit = `contain`;
         photoElement.src = reader.result;
         previewPhoto.appendChild(photoElement);

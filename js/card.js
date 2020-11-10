@@ -25,7 +25,7 @@ window.card = {
     const photos = cardElement.querySelector(`.popup__photos`);
     const img = cardElement.querySelector(`.popup__avatar`);
 
-    const renderFeaturesElement = (item) => {
+    const renderFeatures = (item) => {
       features.innerHTML = ``;
       const listFragment = document.createDocumentFragment();
       for (let i = 0; i < item.offer.features.length; i++) {
@@ -35,7 +35,7 @@ window.card = {
       }
       features.appendChild(listFragment);
     };
-    const renderPhotosElement = (item) => {
+    const renderPhotos = (item) => {
       photos.innerHTML = ``;
       const listFragment = document.createDocumentFragment();
       for (let i = 0; i < item.offer.photos.length; i++) {
@@ -57,9 +57,9 @@ window.card = {
     capacity.textContent = `${advert.offer.rooms} комнаты для ${advert.offer.guests} гостей`;
     time.textContent = `Заезд после ${advert.offer.checkin}, выезд до ${advert.offer.checkout}`;
 
-    renderFeaturesElement(advert);
+    renderFeatures(advert);
     description.textContent = advert.offer.description;
-    renderPhotosElement(advert);
+    renderPhotos(advert);
     cardElement.classList.add(`hidden`);
 
     return cardElement;

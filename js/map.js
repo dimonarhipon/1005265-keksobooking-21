@@ -5,7 +5,7 @@ const map = document.querySelector(`.map`);
 
 const sendGetRequest = (isRequest) => {
   if (isRequest) {
-    window.backend.load(window.pin.successHandler, window.util.errorHandler);
+    window.backend.load(window.pin.onLoadSuccess, window.util.onLoadError);
   }
 };
 

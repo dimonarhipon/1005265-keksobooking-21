@@ -3,6 +3,7 @@
 const URL_IMAGE_DEFAULT = `img/muffin-grey.svg`;
 const MAX_ROOMS = 100;
 const MIN_CAPACITY = 0;
+const DEFAULT_PRICE = 1000;
 
 const BuildingMinPrice = {
   BUNGALOW: 0,
@@ -66,7 +67,7 @@ const onRoomAndCapacitySelectChange = () => {
     return;
   }
   if (roomCount !== MAX_ROOMS && capacityCount === MIN_CAPACITY) {
-    capacitySelect.setCustomValidity(`Такой выбор соотвествует только варианту: не для гостей`);
+    capacitySelect.setCustomValidity(`Такой выбор соотвествует только варианту 100 комнат`);
     return;
   }
   if (roomCount < capacityCount) {
@@ -92,33 +93,43 @@ const setСurrentCoordinatesMarker = (height = window.pin.markerHeight) => {
   window.pin.setCoordinate(x, y);
 };
 
-const successSubmitHandler = () => {
-  window.util.openSuccessPopup();
+const onPostSuccess = () => {
+  window.util.openPopupSuccess();
   window.pin.removeElements();
   window.mapFilter.form.reset();
   form.reset();
+  price.min = DEFAULT_PRICE;
+  price.placeholder = DEFAULT_PRICE;
+
   window.map.disablePage();
   setСurrentCoordinatesMarker();
   window.isLoad = true;
 };
 
-const resetHandler = (evt) => {
+const onResetButtonClick = (evt) => {
   evt.preventDefault();
   form.reset();
+  price.min = DEFAULT_PRICE;
+  price.placeholder = DEFAULT_PRICE;
+
   setСurrentCoordinatesMarker(2 * window.pin.markerHeight);
 
   window.loadImage.previewAvatar.src = URL_IMAGE_DEFAULT;
-  window.loadImage.previewPhoto.querySelector(`img`).remove();
+  if (window.loadImage.previewPhoto.querySelector(`img`)) {
+    window.loadImage.previewPhoto.querySelector(`img`).remove();
+  }
 };
-const submitHandler = (evt) => {
+const onFormSubmit = (evt) => {
   evt.preventDefault();
-  window.backend.post(new FormData(form), successSubmitHandler, window.util.openErrorPopup);
+  window.backend.post(new FormData(form), onPostSuccess, window.util.onPostError);
 
   window.pin.marker.style.top = `${window.pin.markerStartTop - window.pin.markerHeight}px`;
   window.pin.marker.style.left = `${window.pin.markerStartLeft - window.pin.markerWidth}px`;
 
   window.loadImage.previewAvatar.src = URL_IMAGE_DEFAULT;
-  window.loadImage.previewPhoto.querySelector(`img`).remove();
+  if (window.loadImage.previewPhoto.querySelector(`img`)) {
+    window.loadImage.previewPhoto.querySelector(`img`).remove();
+  }
 };
 
 title.addEventListener(`input`, onTitleInput);
@@ -128,9 +139,8 @@ roomSelect.addEventListener(`change`, onRoomAndCapacitySelectChange);
 capacitySelect.addEventListener(`change`, onRoomAndCapacitySelectChange);
 timeInSelect.addEventListener(`change`, onTimeInSelect);
 timeOutSelect.addEventListener(`change`, onTimeOutSelect);
-resetButton.addEventListener(`reset`, resetHandler);
-resetButton.addEventListener(`click`, resetHandler);
-form.addEventListener(`submit`, submitHandler);
+resetButton.addEventListener(`click`, onResetButtonClick);
+form.addEventListener(`submit`, onFormSubmit);
 
 
 window.form = {
